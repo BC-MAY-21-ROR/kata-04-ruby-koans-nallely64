@@ -12,13 +12,37 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 # missing handler and any other supporting methods.  The specification
 # of the Proxy class is given in the AboutProxyObjectProject koan.
 
+# class Proxy
 class Proxy
+  attr_reader :messages
+
   def initialize(target_object)
     @object = target_object
+    @messages = []
     # ADD MORE CODE HERE
   end
 
-  # WRITE CODE HERE
+  def called? (method_name)
+    @messages.include? method_name
+  end
+  
+  def number_of_times_called(method_name)
+    times_called = 0
+    @messages.each do |message|
+      times_called += 1 if message == method_name
+    end
+    times_called
+  end
+
+  def method_missing(method_name, *args, &block)
+    if @object.respond_to?(method_name)
+      @messages.push(method_name)
+      @object.send(method_name, *args)
+    else
+      super(method_name, *args, &block)
+    end
+  end
+  
 end
 
 # The proxy object should pass the following Koan:
@@ -67,7 +91,7 @@ class AboutProxyObjectProject < Neo::Koan
     tv.power
 
     assert tv.called?(:power)
-    assert ! tv.called?(:channel)
+    assert !tv.called?(:channel)
   end
 
   def test_proxy_counts_method_calls
@@ -83,7 +107,7 @@ class AboutProxyObjectProject < Neo::Koan
   end
 
   def test_proxy_can_record_more_than_just_tv_objects
-    proxy = Proxy.new("Code Mash 2009")
+    proxy = Proxy.new('Code Mash 2009')
 
     proxy.upcase!
     result = proxy.split
