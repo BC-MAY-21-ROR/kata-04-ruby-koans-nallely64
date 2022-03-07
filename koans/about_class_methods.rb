@@ -1,5 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/neo')
 
+# class AboutClassMethods
 class AboutClassMethods < Neo::Koan
   class Dog
   end
@@ -48,6 +49,7 @@ class AboutClassMethods < Neo::Koan
 
   # ------------------------------------------------------------------
 
+  # class Dog2
   class Dog2
     def wag
       :instance_level_wag
@@ -64,8 +66,8 @@ class AboutClassMethods < Neo::Koan
 
   def test_class_methods_are_independent_of_instance_methods
     fido = Dog2.new
-    assert_equal instance_level_wag, fido.wag
-    assert_equal class_level_wag, Dog2.wag
+    assert_equal :instance_level_wag, fido.wag
+    assert_equal :class_level_wag, Dog2.wag
   end
 
   # ------------------------------------------------------------------
@@ -80,13 +82,14 @@ class AboutClassMethods < Neo::Koan
 
   def test_classes_and_instances_do_not_share_instance_variables
     fido = Dog.new
-    fido.name = "Fido"
-    assert_equal "Fido", fido.name
+    fido.name = 'Fido'
+    assert_equal 'Fido', fido.name
     assert_equal nil, Dog.name
   end
 
   # ------------------------------------------------------------------
 
+  # class Dog
   class Dog
     def Dog.a_class_method
       :dogs_class_method
